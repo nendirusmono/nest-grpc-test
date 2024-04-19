@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package hero;
+
+service HeroService {
+  rpc FindOne (HeroById) returns (RspHero);
+  rpc FindMany (Empty) returns (Heroes);
+}
+
+message Empty {}
+
+message HeroById {
+  int32 id = 1;
+}
+
+message Hero {
+  string id = 1;
+  string name = 2;
+  int32 strength = 3;
+}
+
+message Heroes {
+  repeated Hero data = 1;
+}
+
+message RspHero {
+  int32 code = 1;
+  string message = 2;
+  optional Hero data = 3;
+}
+
+message RspHeroes {
+  int32 code = 1;
+  string message = 2;
+  repeated Hero data = 3;
+}
