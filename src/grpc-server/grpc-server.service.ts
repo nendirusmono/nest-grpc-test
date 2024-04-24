@@ -1,20 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { CreateGrpcServerDto } from './dto/create-grpc-server.dto';
 import { UpdateGrpcServerDto } from './dto/update-grpc-server.dto';
+import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export class GrpcServerService {
-  create(dto: CreateGrpcServerDto) {
-    console.log('create', dto);
-    return 'This action adds a new grpcServer';
+  constructor(private prisma: PrismaService) {}
+
+  async create(dto: CreateGrpcServerDto) {
+    const rsl = await this.prisma.hero.create({ data: dto });
+    return rsl;
   }
 
-  findAll() {
-    return { data: [{ id: '123', name: 'name', strength: 1202 }] };
+  async findAll() {
+    const data = await this.prisma.hero.findMany();
+    return { data };
   }
 
-  findOne(id: string) {
-    return { data: { id, name: 'name', strength: 1200 } };
+  async findOne(id: string) {
+    const data = await this.prisma.hero.findUniqueOrThrow({ where: { id } });
+    return { data };
   }
 
   update(id: number, dto: UpdateGrpcServerDto) {

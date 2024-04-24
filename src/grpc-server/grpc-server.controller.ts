@@ -21,7 +21,6 @@ export class GrpcServerController {
 
   @GrpcMethod('HeroService', 'FindOne')
   findOne(@Payload() { id }: HeroById) {
-    console.log('grpc serv Findone', id);
     return this.grpcServerService.findOne(id);
   }
 

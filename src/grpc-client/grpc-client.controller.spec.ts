@@ -6,6 +6,7 @@ import { join } from 'path';
 
 describe('GrpcClientController', () => {
   let controller: GrpcClientController;
+  let service: GrpcClientService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -16,7 +17,7 @@ describe('GrpcClientController', () => {
             transport: Transport.GRPC,
             options: {
               package: [`hero`],
-              protoPath: [join(__dirname, '../app.proto')],
+              protoPath: [join(process.cwd(), 'src/app.proto')],
               url: 'localhost:3303',
             },
           },
@@ -27,9 +28,30 @@ describe('GrpcClientController', () => {
     }).compile();
 
     controller = module.get<GrpcClientController>(GrpcClientController);
+    service = module.get<GrpcClientService>(GrpcClientService);
   });
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
+  });
+  describe('findAll', () => {
+    it('should return an array of cats', async () => {
+      const result = [{ id: '123', name: 'name', strength: 1202 }];
+      jest
+        .spyOn(service, 'findAll')
+        .mockImplementation(() => Promise.resolve(result));
+
+      expect(await controller.findAll()).toBe(result);
+    });
+  });
+  describe('findOne', () => {
+    it('should return an array of cats', async () => {
+      const result = { id: '123', name: 'name', strength: 1202 };
+      jest
+        .spyOn(service, 'findOne')
+        .mockImplementation(() => Promise.resolve(result));
+
+      expect(await controller.findOne('1')).toBe(result);
+    });
   });
 });

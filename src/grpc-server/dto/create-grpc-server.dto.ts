@@ -1,1 +1,4 @@
-export class CreateGrpcServerDto {}
+export class CreateGrpcServerDto {
+  name: string;
+  strength: number;
+}

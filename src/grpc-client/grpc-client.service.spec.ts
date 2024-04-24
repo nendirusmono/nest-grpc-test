@@ -15,7 +15,7 @@ describe('GrpcClientService', () => {
             transport: Transport.GRPC,
             options: {
               package: [`hero`],
-              protoPath: [join(__dirname, '../app.proto')],
+              protoPath: [join(process.cwd(), 'src/app.proto')],
               url: 'localhost:3303',
             },
           },

@@ -7,7 +7,7 @@ export interface HeroService {
   FindMany(
     data: GrpcEmptyRequest,
     metadata: Metadata,
-  ): Observable<HeroGrpcResponse>;
+  ): Observable<HeroesGrpcResponse>;
 }
 
 export interface GrpcBaseResponse {
@@ -16,11 +16,15 @@ export interface GrpcBaseResponse {
 }
 
 export interface HeroGrpcResponse extends GrpcBaseResponse {
-  data?: Hero | Hero[];
+  data?: Hero;
+}
+
+export interface HeroesGrpcResponse extends GrpcBaseResponse {
+  data?: Hero[];
 }
 
 export interface Hero {
-  id: number;
+  id: string;
   name: string;
   strength: number;
 }

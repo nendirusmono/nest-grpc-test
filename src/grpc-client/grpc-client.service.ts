@@ -4,6 +4,7 @@ import { UpdateGrpcClientDto } from './dto/update-grpc-client.dto';
 import { ClientGrpc } from '@nestjs/microservices';
 import { HeroService } from 'src/grpc-server/grpc-server.interface';
 import { Metadata } from '@grpc/grpc-js';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class GrpcClientService {
@@ -18,14 +19,16 @@ export class GrpcClientService {
     return 'This action adds a new grpcClient';
   }
 
-  findAll() {
+  async findAll() {
     const meta = new Metadata();
-    return this.hero_grpc.FindMany({}, meta);
+    const rsl = await lastValueFrom(this.hero_grpc.FindMany({}, meta));
+    return rsl.data;
   }
 
-  findOne(id: string) {
+  async findOne(id: string) {
     const meta = new Metadata();
-    return this.hero_grpc.FindOne({ id }, meta);
+    const rsl = await lastValueFrom(this.hero_grpc.FindOne({ id }, meta));
+    return rsl.data;
   }
 
   update(id: number, dto: UpdateGrpcClientDto) {
