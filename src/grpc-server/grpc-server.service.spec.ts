@@ -1,34 +1,51 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { GrpcServerService } from './grpc-server.service';
 import { PrismaService } from '../prisma.service';
-import { PrismaClient } from '@prisma/client';
-import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
 
 describe('GrpcServerService', () => {
   let service: GrpcServerService;
-  let prisma: DeepMockProxy<PrismaClient>;
+
+  let findUniqueMock: jest.Mock;
+  let findManyMock: jest.Mock;
 
   beforeEach(async () => {
+    findUniqueMock = jest.fn();
+    findManyMock = jest.fn();
     const module: TestingModule = await Test.createTestingModule({
-      providers: [GrpcServerService, PrismaService],
-    })
-      .overrideProvider(PrismaService)
-      .useValue(mockDeep<PrismaClient>())
-      .compile();
+      providers: [
+        GrpcServerService,
+        {
+          provide: PrismaService,
+          useValue: {
+            hero: {
+              findUniqueOrThrow: findUniqueMock,
+              findMany: findManyMock,
+            },
+          },
+        },
+      ],
+    }).compile();
 
     service = module.get<GrpcServerService>(GrpcServerService);
-    prisma = module.get(PrismaService);
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
-
-  it('should returns heroes', () => {
+  describe('hero findAll', () => {
     const heroes = [];
+    it('should returns heroes', () => {
+      findManyMock.mockResolvedValue(heroes);
 
-    prisma.hero.findMany.mockResolvedValueOnce(heroes);
+      expect(service.findAll()).resolves.toHaveProperty('data', heroes);
+    });
+  });
+  describe('hero findOne', () => {
+    const hero = { id: 'abcd', name: 'efgh', strength: 123 };
+    it('should returns a hero', () => {
+      findUniqueMock.mockResolvedValue(hero);
 
-    expect(service.findAll()).resolves.toBe(heroes);
+      expect(service.findOne('qwerty')).resolves.toHaveProperty('data', hero);
+    });
   });
 });
