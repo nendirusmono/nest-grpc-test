@@ -35,7 +35,7 @@ describe('GrpcClientController', () => {
     expect(controller).toBeDefined();
   });
   describe('findAll', () => {
-    it('should return an array of cats', async () => {
+    it('should return an array of heroes', async () => {
       const result = [{ id: '123', name: 'name', strength: 1202 }];
       jest
         .spyOn(service, 'findAll')
@@ -45,7 +45,7 @@ describe('GrpcClientController', () => {
     });
   });
   describe('findOne', () => {
-    it('should return an array of cats', async () => {
+    it('should return a hero', async () => {
       const result = { id: '123', name: 'name', strength: 1202 };
       jest
         .spyOn(service, 'findOne')
